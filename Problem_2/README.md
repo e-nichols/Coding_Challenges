@@ -34,6 +34,7 @@ Ruby
 - Will need an object/class to house cartesian pairs
 - Need to keep track of two lowest distances between pairs
 - Number of possible point pairs: n pairs, taken 2 at a time --> nC2 = n!/(2!(n-2)!)
+- Need to look into a "Divide and Conquer" strategy as computation time will increase drastically as input size increases
 
 ###Outline
 1. Read in and store cartesian pairs from .txt file
@@ -42,3 +43,4 @@ Ruby
 4. Output two lowest pairs to user
 
 ###Takeaways
+- Still working on this. Tabling until I have time to read through the "Divide and Conquer" approach... it was a little denser than I imagined.
