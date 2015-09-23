@@ -1,4 +1,4 @@
-#Problem 4: Palindrome Checker + Returning Shortest Palindrome
+#Problem 5: Palindrome Checker + Returning Shortest Palindrome
 
 ###Problem Source:
 This is a problem I got burned on from a previous coding interview. Smh.
