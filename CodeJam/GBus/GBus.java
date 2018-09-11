@@ -1,9 +1,11 @@
 import java.util.Scanner;
-import java.util.HashMap;
 
-/*
- * GBus Solution
- * etnichols@
+/**
+ * Codejam Kickstart: GBus count Solution
+ * https://code.google.com/codejam/contest/4374486/dashboard
+ *
+ * Author: evantnichols@gmail.com
+ * Date: 9/10/18
  */
  public final class GBus {
    public final static String OUTPUT_BASE = "Case #";
@@ -16,37 +18,40 @@ import java.util.HashMap;
     int numTestCases = scanner.nextInt();
 
     for(int i = 0; i < numTestCases; i++){
-      // Int array to keep track of served cities.
+      /**
+       * Keep track of the cities served using a simple integer array. The
+       * array size should be adjusted based on the max size of the input data.
+       * (This is hacky).
+       */
       int[] cityArray = new int[5001];
 
       // next line is the total number of buses N.
       int numGBuses = scanner.nextInt();
 
-      // we have N pairs of numbers.
+      /**
+       * Following are N pairs of numbers, each pair representing the range of
+       * cities served by the buses. First pair is the cities served by the
+       * first bus, and so on. Inclusive range.
+       */
       for(int j = 0; j < numGBuses; j++){
         int c1 = scanner.nextInt();
         int c2 = scanner.nextInt();
 
-        // System.out.printf("City range: %d - %d \n", c1,c2 );
-
+        // Mark each city as served by incrementing counter.
         for(int z = c1; z <= c2; z++){
           ++cityArray[z];
         }
       }
 
       // The number of cities to inspect.
-      int numCitiesToInspect = scanner.nextInt();
-      // System.out.printf("num cities to inspect: %d\n", numCitiesToInspect);
+      int numCities = scanner.nextInt();
       String output = OUTPUT_BASE.concat( Integer.toString(i + 1) ).concat(": ");
 
       // For each city grab its value from the array.
-      for(int k = 0; k < numCitiesToInspect; k++){
+      for(int k = 0; k < numCities; k++){
         int city = scanner.nextInt();
-        // System.out.printf("City to inspect: %d\n", city);
-
-        int cityValue = cityArray[city];
-        // System.out.printf("City to inspect: %d with value %d\n", city, cityValue);
-        output = output.concat( Integer.toString(cityValue) ).concat(" ");
+        int numBusesServingCity = cityArray[city];
+        output = output.concat( Integer.toString(numBusesServingCity) ).concat(" ");
       }
 
       System.out.println(output);
