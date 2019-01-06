@@ -29,6 +29,7 @@ const processInput_ = async (infile, process) => {
   })
 }
 
+
 /**
  * Creates a false-init'ed 2D array using supplied size.
  */
@@ -44,30 +45,85 @@ const createVisitedMap_ = (size) => {
   return map
 }
 
+
+/**
+ * Output a formatted visited map to the console.
+ */
+const prettyPrintVisited_ = (visited) => {
+  visited.forEach(row => {
+    let fmted = row.map(vis => vis ? '*' : '!').join(' ')
+    console.log(fmted)
+  })
+  console.log('\n')
+}
+
+
+/**
+ * Returns coordinates of next non-visited X on the board, if any.
+ */
+const findNextNonVisitedX_ = (map, visited) => {
+  let size = map.length
+  for(let i = 0; i < size; i++){
+    for(let j = 0; j < size; j++){
+      if(map[i][j] === 'X' && !visited[i][j]){
+        return {i,j}
+      }
+    }
+  }
+  return null
+}
+
+
+/**
+ * Recursively explores a lake.
+ */
+const explore_ = ({i,j}, map, visited) => {
+  if(map[i][j] === 'O' || visited[i][j] === true){
+    return
+  }
+
+  prettyPrintVisited_(visited)
+
+  visited[i][j] = true
+  let size = map.length
+
+  if(i-1 >= 0){
+    explore_({i: i-1, j}, map, visited)
+  }
+  if(i+1 < size){
+    explore_({i: i+1, j}, map, visited)
+  }
+  if(j-1 >= 0){
+    explore_({i, j: j-1}, map, visited)
+  }
+  if(j+1 < size){
+    explore_({i, j: j+1}, map, visited)
+  }
+}
+
+
 /**
  * Evaluate a map, outputting number of unique bodies of water.
  */
 const evaluate_ = map => {
-  for(let i in map){
-    console.log(map[i])
+  const visited = createVisitedMap_(map.length)
+  let numLakes = 0
+  let nextX = findNextNonVisitedX_(map, visited)
+  while(nextX){
+    explore_(nextX, map, visited)
+    numLakes++
+    nextX = findNextNonVisitedX_(map, visited)
   }
-  // Start from the top left, and work way through map.
 
-  // From any given point, we can determine whether it's connected based on
-
-  // following patterns.
-
-  // If we are an X, and above, left, right, or below is also an X, it's
-  // connected.
-
-  // Keep track of visited or not.
-
-  // Search algo trying to find water. If it keeps finds some, it starts a
-  // counter. It continues to search all directions until it fails. }
+  prettyPrintVisited_(visited)
+  console.log(`Evaluation Complete.\nNumber of Lakes: ${numLakes}.`)
 }
 
 
-/** @type {!Array< Array<String> >} */
+/**
+ * Public API Method, evaluates the number of unique lakes in the supplied
+ * infile.
+ */
 const evaluateMap = (infile) => {
   processInput_(infile, evaluate_)
 }
