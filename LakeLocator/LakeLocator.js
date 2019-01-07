@@ -4,29 +4,28 @@ const readline = require('readline')
 /**
  * Using file stream to process the input file.
  */
-const processInput_ = async (infile, process) => {
-  // Read the input file.
-  let fstream
-  let rl
-  try {
-    fstream = fs.createReadStream(infile)
-    rl = readline.createInterface({
-      input: fstream,
+const processInput_ = (infile, evaluate) => {
+  return new Promise((resolve, reject) => {
+    let fstream
+    let rl
+    try {
+      fstream = fs.createReadStream(infile)
+      rl = readline.createInterface({
+        input: fstream,
+      })
+    } catch(e){
+      reject('Error opening stream: ' + e)
+    }
+
+    let map = []
+    // This just functions, you don't have to 'call' it.
+    rl.on('line', line => {
+      map.push(line.split(''))
     })
-  } catch(e){
-    console.log('Error opening stream: ' + e)
-  }
-
-  let map = []
-
-  // This just functions, you don't have to call it.
-  rl.on('line', line => {
-    // It's an actual line. Do something with it.
-    map.push(line.split(''))
-  })
-  .on('close', () => {
-    process(map)
-  })
+    .on('close', () => {
+      resolve(evaluate(map))
+    })
+})
 }
 
 
@@ -60,6 +59,7 @@ const prettyPrintVisited_ = (visited) => {
 
 /**
  * Returns coordinates of next non-visited X on the board, if any.
+ * TODO: Make more efficient.
  */
 const findNextNonVisitedX_ = (map, visited) => {
   let size = map.length
@@ -107,16 +107,18 @@ const explore_ = ({i,j}, map, visited) => {
  */
 const evaluate_ = map => {
   const visited = createVisitedMap_(map.length)
-  let numLakes = 0
   let nextX = findNextNonVisitedX_(map, visited)
+  let numLakes = 0
   while(nextX){
     explore_(nextX, map, visited)
     numLakes++
     nextX = findNextNonVisitedX_(map, visited)
   }
 
+  // Side effect: print final visited map.
   prettyPrintVisited_(visited)
-  console.log(`Evaluation Complete.\nNumber of Lakes: ${numLakes}.`)
+
+  return numLakes
 }
 
 
@@ -124,8 +126,9 @@ const evaluate_ = map => {
  * Public API Method, evaluates the number of unique lakes in the supplied
  * infile.
  */
-const evaluateMap = (infile) => {
-  processInput_(infile, evaluate_)
+const evaluateMap = async (infile) => {
+  let numLakes = await processInput_(infile, evaluate_)
+  console.log(`Evaluation Complete.\nNumber of Lakes: ${numLakes}.`)
 }
 
 module.exports = {

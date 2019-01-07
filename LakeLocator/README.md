@@ -11,7 +11,3 @@ O X O O
 
 The following input map contains 3 unique lakes.
 (i, j) with (0, 0) being the top left corner.
-
-Input of the following form:
-n
-the grid, no spaces between characters
