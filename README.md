@@ -1,4 +1,4 @@
-# Coding_Challenges
+# Coding challenges
 To prepare for technical interviews.
 
 **Each Problem includes:**
